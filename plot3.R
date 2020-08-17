@@ -1,0 +1,15 @@
+png(filename = "plot3.png",width = 480,height = 480)
+powerdata<-read.csv('household_power_consumption.txt',sep=';')
+DateTime <- strptime(paste(powerdata$Date, powerdata$Time), format="%d/%m/%Y %H:%M:%S")
+powerdata<-mutate(powerdata,DateTime=DateTime)
+wrongdateformat<-powerdata[,1]
+correctdateformat<-as.Date(wrongdateformat,'%d/%m/%Y')
+powerdata[,1]<-correctdateformat
+logicalvectorofdates<-powerdata$Date=='2007-02-01'|powerdata$Date=='2007-02-02'
+reqdata<-powerdata[logicalvectorofdates,]
+with(reqdata,plot(DateTime,Sub_metering_1,type='n',xlab='',ylab='Energy sub metering'))
+with(reqdata,points(DateTime,Sub_metering_1,type='l',col='black'))
+with(reqdata,points(DateTime,Sub_metering_2,type='l',col='red'))
+with(reqdata,points(DateTime,Sub_metering_3,type='l',col='blue'))
+legend("topright",lty=1,lwd=2,col=c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+dev.off()
